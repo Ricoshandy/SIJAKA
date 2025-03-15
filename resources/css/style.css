@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #dadada;
+}
+
+.sidebar {
+    width: 250px;
+    background: linear-gradient(to bottom, #62cfe7, #ffffff);
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+    font-size: 18px;
+}
+
+.sidebar nav ul li ul {
+    margin-top: 5px;
+    margin-left: 15px;
+    font-size: 16px;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.header {
+    background-color: #ffffff;
+    padding: 20px;
+  
+    text-align: center;
+    margin-bottom: 20px;
+    margin-left: 40px;
+
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-left: 25px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    padding: 200px;
+    margin-left: 40px;
+
+}
+
+.stat-box{
+    background-color: #d3d3d3;
+    padding: 30px;
+    text-align: center;
+    justify-content: space-around;
+    width: 150px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    margin: 20px;
+    border-radius: 10px;
+
+}
+
+.stat-box h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.stat-box p {
+    font-size: 24px;
+    margin: 10px 0 0;
+}
