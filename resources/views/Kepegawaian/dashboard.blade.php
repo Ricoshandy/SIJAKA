@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard | Kepegawaian</title>
     <link rel="stylesheet" href="\css\style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
         <div class="logo">
             <img src="\image\Logo.png" alt="Logo">
         </div>
-        <h2>Dosen</h2>
+        <h2>Kepegawaian</h2>
         <nav>
             <ul>
                 <li>Dashboard</li>
