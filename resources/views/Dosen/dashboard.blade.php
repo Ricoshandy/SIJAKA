@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="sijaka\resources\css\style.css">
+    <link rel="stylesheet" href="\css\style.css">
 </head>
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="public\image\Logo.png" alt="Logo">
+            <img src="\image\Logo.png" alt="Logo">
         </div>
         <h2>Dosen</h2>
         <nav>
