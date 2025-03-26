@@ -1,0 +1,69 @@
+// Rumpun UMUM
+
+tabel: pengajuan
+
+kolom:
+
+rumpun_ilmu (enum [ 'UMUM', 'AGAMA' ] )
+jenjang (enum [ 
+	'ASISTEN_AHLI', 	    | 'LEKTOR',                 | 'LEKTOR_KEPALA',                          | 'GURU_BESAR', 
+] )
+
+	ijazah_tertinggi*       | ijazah_tertinggi*         | ijazah_tertinggi*                         | ijazah_tertinggi
+	disertasi*              | disertasi*                | disertasi*                                | disertasi
+	sk_cpns*                | sk_cpns*                  | sk_cpns                                   | sk_cpns
+	sk_pns                  | sk_pns                    | sk_pns                                    | sk_pns
+	sk_pak_integrasi        | sk_pak_integrasi          | sk_pak_integrasi                          | sk_pak_integrasi
+	sk_pak_konversi         | sk_pak_konversi           | sk_pak_konversi                           | sk_pak_konversi
+	dupak*                  | dupak*                    | dupak*                                    | dupak
+	lbkd*                   | lbkd*                     | lbkd*                                     | lbkd
+	skp*                    | skp*                      | skp*                                      | skp
+	keabsahan_karil*        | keabsahan_karil*          | keabsahan_karil*                          | keabsahan_karil
+	profile_penelitian*     | profile_penelitian*       | profile_penelitian*                       | profile_penelitian
+	peta_jabatan*           | peta_jabatan*             | peta_jabatan*                             | peta_jabatan
+	pengantar_dekan*        | pengantar_dekan*          | pengantar_dekan*                          | pengantar_dekan
+	surat_hukuman_disiplin* | surat_hukuman_disiplin*   | surat_hukuman_disiplin*                   | surat_hukuman_disiplin
+	surat_status_pidana*    | surat_status_pidana*      | surat_status_pidana*                      | surat_status_pidana
+	isian_pribadi*          | isian_pribadi*            | isian_pribadi*                            | isian_pribadi
+                                                        | sertifikat_pendidik                       | sertifikat_pendidik
+                                                        | sk_pengangkatan_fungsional_pertama        | sk_pengangkatan_fungsional_pertama
+                                                        | sk_kenaikan_pangkat_terakhir              | sk_kenaikan_pangkat_terakhir
+                                                        | sk_kenaikan_fungsional_terakhir           | sk_kenaikan_fungsional_terakhir
+                                                        | pakta_integritas_validasi_karya           | pakta_integritas_validasi_karya
+                                                                                                    | sayrat_khusus
+
+
+
+// Rumpun AGAMA
+
+tabel: pengajuan
+
+kolom:
+
+rumpun_ilmu (enum [ 'UMUM', 'AGAMA' ] )
+jenjang (enum [ 
+	'ASISTEN_AHLI', 	    | 'LEKTOR',                             | 'LEKTOR_KEPALA',                          | 'GURU_BESAR', 
+] )
+
+    ijazah_tertinggi*       | ijazah_tertinggi*                     | ijazah_tertinggi*                         | ijazah_tertinggi
+    disertasi*              | disertasi*                            | disertasi*                                | disertasi
+    sk_cpns*                | sk_cpns*                              | sk_cpns                                   | sk_cpns
+    sk_pns                  | sk_pns                                | sk_pns                                    | sk_pns
+    sk_pak_integrasi        | sk_pak_integrasi                      | sk_pak_integrasi                          | sk_pak_integrasi
+    sk_pak_konversi         | sk_pak_konversi                       | sk_pak_konversi                           | sk_pak_konversi
+    dupak*                  | dupak*                                | dupak*                                    | dupak
+    lbkd*                   | lbkd*                                 | lbkd*                                     | lbkd
+    skp*                    | skp*                                  | skp*                                      | skp
+    keabsahan_karil*        | keabsahan_karil*                      | keabsahan_karil*                          | keabsahan_karil
+    profile_penelitian*     | profile_penelitian*                   | profile_penelitian*                       | profile_penelitian
+    peta_jabatan*           | peta_jabatan*                         | peta_jabatan*                             | peta_jabatan
+    pengantar_dekan*        | pengantar_dekan*                      | pengantar_dekan*                          | pengantar_dekan
+    surat_hukuman_disiplin* | surat_hukuman_disiplin*               | surat_hukuman_disiplin*                   | surat_hukuman_disiplin
+    surat_status_pidana*    | surat_status_pidana*                  | surat_status_pidana*                      | surat_status_pidana
+    isian_pribadi*          | isian_pribadi*                        | isian_pribadi*                            | isian_pribadi
+                            | sk_pengangkatan_fungsional_pertama    | sertifikat_pendidik                       | sertifikat_pendidik
+                                                                    | sk_pengangkatan_fungsional_pertama        | sk_pengangkatan_fungsional_pertama
+                                                                    | sk_kenaikan_pangkat_terakhir              | sk_kenaikan_pangkat_terakhir
+                                                                    | sk_kenaikan_fungsional_terakhir           | sk_kenaikan_fungsional_terakhir
+                                                                                                                | sayrat_khusus
+
