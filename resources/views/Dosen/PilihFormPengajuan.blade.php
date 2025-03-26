@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>From Pengajuan</title>
     <link rel="stylesheet" href="\css\style.css">
 </head>
 <body>
@@ -39,39 +39,25 @@
         <div class="header">
             <h1>Sistem Informasi Kenaikan Jabatan Akademik Dosen</h1>
         </div>
-        <div class="stats">
-            
-            @if (session('success'))
-                <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if ($errors->any())
-                <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            
-            <div class="stat-box">
-                <h3>Dosen</h3>
-                <p>3031</p>
+        <div class="">
+
+            <h1 style="text-align: center; font-size: 24px; color: #333;">Pilih Pengajuan</h1>
+
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: auto; padding: 10px 28px;">
+                @foreach ($options as $index => $option)
+                    @php
+                        $colors = ['green', 'blue']; 
+                        $color = $colors[floor($index / 4) % count($colors)];
+                    @endphp
+
+                    <div style="padding: 10px; text-align: center;">
+                        <a href="{{ route('form', ['id' => $option->id]) }}" style="display: block; text-decoration: none; color: white; background-color: {{ $color }}; padding: 10px 15px; border-radius: 5px; font-size: 16px;">
+                            Rumpun {{ $option->rumpun }} - Ke {{ $option->usul }}
+                        </a>
+                    </div>
+                @endforeach
             </div>
-            <div class="stat-box">
-                <h3>Total Pengajuan</h3>
-                <p>{{ Auth::user()->getPengajuans()->count() }}</p>
-            </div>
-            <div class="stat-box">
-                <h3>Di Tolak</h3>
-                <p>120</p>
-            </div>
-            <div class="stat-box">
-                <h3>Di Terima</h3>
-                <p>46</p>
-            </div>
+
         </div>
     </div>
 </body>

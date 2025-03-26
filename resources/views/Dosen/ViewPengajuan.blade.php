@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>From Pengajuan</title>
     <link rel="stylesheet" href="\css\style.css">
 </head>
 <body>
@@ -37,15 +37,10 @@
     </div>
     <div class="main-content">
         <div class="header">
-            <h1>Sistem Informasi Kenaikan Jabatan Akademik Dosen</h1>
+            <h1>Form Usul Kenaikan Jabatan</h1>
         </div>
-        <div class="stats">
+        <div style="padding: 0 28px;">
             
-            @if (session('success'))
-                <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
-                    {{ session('success') }}
-                </div>
-            @endif
             @if ($errors->any())
                 <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
                     <ul>
@@ -55,24 +50,37 @@
                     </ul>
                 </div>
             @endif
-            
-            <div class="stat-box">
-                <h3>Dosen</h3>
-                <p>3031</p>
+
+            <h1 style="text-align: left; font-size: 24px; color: #333; background-color:rgb(136, 239, 255); border-radius: 8px; padding: 10px 10px;">Rumpun: {{ $pengajuan->getFormPengajuan->rumpun }}</h1>
+            <h1 style="text-align: left; font-size: 24px; color: #333; background-color:rgb(190, 245, 255); border-radius: 8px; padding: 10px 10px;">Usulan: Ke {{ $pengajuan->getFormPengajuan->usul }}</h1>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%;">
+                @foreach ($pengajuan->getFormPengajuan->getFormPengajuanDetails()->orderBy('order', 'ASC')->get() as $key)
+                <div class="file-upload-container" style="margin-bottom: 16px; background-color:rgb(245, 255, 245); border-radius: 8px; padding: 14px 14px;">
+                    
+                    @php
+                    $column = $key->key;    
+                    @endphp
+
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">
+                        {{ $key->title }}
+                    </label>
+
+                    @if ($pengajuan->$column !== null)
+                        <iframe src="/{{$pengajuan->$column}}" frameborder="0" width="100%" height="100%"></iframe>
+                    @else
+                        <span style="color: red;">*Berkas Belum di Upload*</span>
+                    @endif
+
+                </div>
+                @endforeach
             </div>
-            <div class="stat-box">
-                <h3>Total Pengajuan</h3>
-                <p>{{ Auth::user()->getPengajuans()->count() }}</p>
-            </div>
-            <div class="stat-box">
-                <h3>Di Tolak</h3>
-                <p>120</p>
-            </div>
-            <div class="stat-box">
-                <h3>Di Terima</h3>
-                <p>46</p>
-            </div>
+
+
         </div>
+
     </div>
+
+
 </body>
 </html>
