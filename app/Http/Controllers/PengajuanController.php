@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\FormPengajuan;
 use App\Models\Pengajuan;
+use App\Models\ProgresPengajuan;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Str;
 
 class PengajuanController extends Controller
@@ -27,6 +29,8 @@ class PengajuanController extends Controller
         $pengajuan->user_id = $user->id;
         $pengajuan->form_pengajuan_id = $id;
 
+        $requestCount = 0;
+
         foreach ($formDetails as $detail) {
             if ($request->hasFile($detail->key)) {
                 
@@ -34,20 +38,43 @@ class PengajuanController extends Controller
 
                 $file = $request->file($key);
                 $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-                $destinationPath = 'pengajuan/' . $user->email . '/' . $key;
+                $destinationPath = "pengajuan/{$user->email}/{$key}";
                 if (!File::exists($destinationPath)) {
                     File::makeDirectory($destinationPath, 0755, true);
                 }
-                $file->move($destinationPath, $fileName);
+                Storage::putFileAs($destinationPath, $file, $fileName);
                 $uploadedFiles[$key] = $destinationPath . '/' . $fileName;
 
                 $pengajuan->$key = $uploadedFiles[$key];
+                $requestCount++;
             }
+        }
+
+        if ($request->pengajuan && $requestCount == $formDetails->count()) {
+            $message = 'Pengajuan anda berhasil dan sedang dalam proses review oleh staff kepegawaian';
+            $pengajuan->status = 'BARU';
+            $pengajuan->tahap = 'VERIFIKASI_BERKAS';
+            $keterangan = 'Form Pengajuan telah diselesaikan, dikirim ke staff kepegawaian untuk di verifikasi';
+        } else {
+            $message = 'Pengajuan anda berhasil disimpan, namun belum di ajukan dan belum dapat diverifikasi staff kepegawaian.';
+            $pengajuan->status = 'DRAFT';
+            $pengajuan->tahap = 'PERLU_DILENGKAPI';
+            $keterangan = 'Form Pengajuan disimpan, Perlu dilengkapi agar dapat diverifikasi oleh staff kepegawaian';
         }
 
         $pengajuan->save();
 
-        return redirect()->route('dosen_dashboard')->with('success', 'Data berhasil disimpan!');
+        
+        ProgresPengajuan::create([
+            'pengajuan_id' => $pengajuan->id,
+            'verified_by' => $user->id,
+            'status' => $pengajuan->status,
+            'tahap' => $pengajuan->tahap,
+            'keterangan' => $keterangan,
+        ]);
+        
+
+        return redirect()->route('dosen_dashboard')->with('success', $message);
     }
 
     public function pengajuan_view($id)
@@ -72,30 +99,107 @@ class PengajuanController extends Controller
 
         $user = $pengajuan->getUser;
 
-        foreach ($formDetails as $detail) {
-            if ($request->hasFile($detail->key)) {
-                
-                $key = $detail->key;
+        $requestCount = 0;
 
-                if ($pengajuan->$key !== null) {
-                    unlink($pengajuan->$key);
+        foreach ($formDetails as $detail) {
+
+            $key = $detail->key;
+
+            if ($request->hasFile($detail->key)) {    
+
+                if ($pengajuan->$key !== null && Storage::exists($pengajuan->$key)) {
+                    Storage::delete($pengajuan->$key);
                 }
 
                 $file = $request->file($key);
                 $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
-                $destinationPath = 'pengajuan/' . $user->email . '/' . $key;
+                $destinationPath = "pengajuan/{$user->email}/{$key}";
                 if (!File::exists($destinationPath)) {
                     File::makeDirectory($destinationPath, 0755, true);
                 }
-                $file->move($destinationPath, $fileName);
+                Storage::putFileAs($destinationPath, $file, $fileName);
                 $uploadedFiles[$key] = $destinationPath . '/' . $fileName;
 
                 $pengajuan->$key = $uploadedFiles[$key];
             }
+            
+            if ($pengajuan->$key !== null) {
+                $requestCount++;
+            }
+        }
+
+        if ($request->pengajuan && $requestCount == $formDetails->count()) {
+            $message = 'Pengajuan anda berhasil dan sedang dalam proses review oleh staff kepegawaian';
+            $pengajuan->status = 'BARU';
+            $pengajuan->tahap = 'VERIFIKASI_BERKAS';
+            $keterangan = 'Form Pengajuan telah diselesaikan, dikirim ke staff kepegawaian untuk di verifikasi';
+        } else {
+            $message = 'Pengajuan anda berhasil disimpan, namun belum di ajukan dan belum dapat diverifikasi staff kepegawaian.';
+            $pengajuan->status = 'DRAFT';
+            $pengajuan->tahap = 'PERLU_DILENGKAPI';
+            $keterangan = 'Form Pengajuan disimpan, Namun belum lengkap Perlu dilengkapi agar dapat diverifikasi oleh staff kepegawaian';
         }
 
         $pengajuan->save();
 
-        return redirect()->route('dosen_dashboard')->with('success', 'Data berhasil disimpan!');
+
+        ProgresPengajuan::create([
+            'pengajuan_id' => $pengajuan->id,
+            'verified_by' => $user->id,
+            'status' => $pengajuan->status,
+            'tahap' => $pengajuan->tahap,
+            'keterangan' => $keterangan,
+        ]);
+
+        return redirect()->route('dosen_dashboard')->with('success', $message);
+    }
+
+    public function kepegawaian_pengajuan_list()
+    {
+        $pengajuans = Pengajuan::all();
+        return view('Kepegawaian.ListPengajuan', compact('pengajuans'));
+    }
+
+    public function pengajuan_review($id)
+    {
+        $pengajuan = Pengajuan::find($id);
+        return view('Kepegawaian.ReviewPengajuan', compact('pengajuan'));
+    }
+
+    public function pengajuan_progress($id){
+        $pengajuan = Pengajuan::find($id);
+        return view('Dosen.ProgressPengajuan', compact('pengajuan'));
+    }
+
+
+    public function comite_pengajuan_list()
+    {
+        $pengajuans = Pengajuan::all();
+        return view('Comite.ListPengajuan', compact('pengajuans'));
+    }
+
+    public function sidang_komite_view($id){
+        $pengajuan = Pengajuan::find($id);
+        return view('Comite.SidangKomite', compact('pengajuan'));
+    }
+
+    public function getFile($email, $key, $file){
+        $path = "private/pengajuan/$email/$key/$file";
+        $fullPath = storage_path('app/' . $path);
+        if (!file_exists($fullPath)) {
+            abort(404);
+        }
+        return response()->file($fullPath);
+    }
+
+    public function sidang_senat_view($id){
+        $pengajuan = Pengajuan::find($id);
+        return view('Senat.SidangSenat', compact('pengajuan'));
+    }
+
+    public function senat_pengajuan_list()
+    {
+        $pengajuans = Pengajuan::all();
+        return view('Senat.ListPengajuan', compact('pengajuans'));
     }
 }

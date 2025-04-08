@@ -1,4 +1,4 @@
-@extends('Dosen.Components.sidebar')
+@extends('Comite.Components.sidebar')
 @section('main-content')
 
 
@@ -12,7 +12,7 @@
                     <thead>
                         <tr style="background-color:rgb(160, 255, 255);">
                             <th align="left" style="padding: 12px 6px">No</th>
-                            <th>Id Pengajuan</th>
+                            <th>Dosen</th>
                             <th>Rumpun</th>
                             <th>Usul</th>
                             <th>Status</th>
@@ -22,9 +22,9 @@
                     </thead>
                     <tbody>
                         @foreach ($pengajuans as $i => $pengajuan)    
-                            <tr style="background-color: {{ $i % 2 == 0 ? '#ffffff' : '#dddddd' }};">
+                        <tr style="background-color: {{ $i % 2 == 0 ? '#ffffff' : '#dddddd' }};">
                                 <td align="left" style="padding: 6px 6px">{{ $i+1 }}</td>
-                                <td align="center">{{ $pengajuan->id }}</td>
+                                <td align="center">{{ $pengajuan->getUser->name }}</td>
                                 <td align="center">
                                     <div style="border-radius: 10px; font-weight: bold; padding: 4px 0; 
                                         background-color: {{ $pengajuan->getFormPengajuan->rumpun == 'AGAMA' ? '#ffebcc' : '#e7f1ff' }}; 
@@ -56,33 +56,15 @@
                                         {{ $pengajuan->status }}
                                     </div>
                                 </td>
-
                                 <td align="center">{{ $pengajuan->tahap }}</td>
-                                <td align="center" class="space-x-3" style="padding: 6px 0;">
-                                    
-                                    <a class="icon-button" style="--btn-bg: blue;" href="{{ route('pengajuan.view', ['id' => $pengajuan->id]) }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
-                                    </a>
-
-                                    @if ($pengajuan->tahap == 'PERLU_DILENGKAPI')
-                                        
-                                        <a class="icon-button" style="--btn-bg: green;" href="{{ route('pengajuan.edit', ['id' => $pengajuan->id]) }}">
+                                <td align="center" style="padding: 6px 0;">
+                                    @if ($pengajuan->tahap == 'SIDANG_KOMITE' && $pengajuan->status != 'DITOLAK')
+                                        <a class="icon-button" style="--btn-bg: skyblue;" href="{{ route('sidang.comite.view', ['id' => $pengajuan->id]) }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                                             </svg>
                                         </a>
-                                        
                                     @endif
-
-                                    <a class="icon-button" style="--btn-bg: skyblue;" href="{{ route('pengajuan.progress', ['id' => $pengajuan->id]) }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                                        </svg>
-                                    </a>
-
                                 </td>
                             </tr>
                         @endforeach

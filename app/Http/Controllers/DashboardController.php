@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengajuan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -11,7 +13,11 @@ class DashboardController extends Controller
     }
 
     public function kepegawaian_dashboard() {
-        return view('Kepegawaian.dashboard');
+        $totalDosen = User::whereRole('dosen')->count();
+        $totalPengajuan = Pengajuan::all()->count();
+        $berkasDiterima = Pengajuan::whereTahap(['SIDANG_KOMITE','SIDANG_SENAT','PENGAJUAN_SISTER', 'SK_KENAIKAN'])->count();
+        $berkasDitolak = Pengajuan::whereStatus('REVISI')->count();
+        return view('Kepegawaian.dashboard', compact('totalDosen', 'totalPengajuan', 'berkasDiterima', 'berkasDitolak'));
     }
 
     public function comite_dashboard() {

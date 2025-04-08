@@ -12,7 +12,7 @@ class FormLektorAgamaSeeder extends Seeder
     public function run(): void
     {
         $lektor_agama = FormPengajuan::where([
-                ['rumpun', '=', 'UMUM'],
+                ['rumpun', '=', 'AGAMA'],
                 ['usul', '=', 'LEKTOR']
             ])->first();
         
