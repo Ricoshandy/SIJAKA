@@ -33,4 +33,9 @@ class AuthController extends Controller
     public function login_form(){
         return view('Auth.login');
     }
+
+    public function logout(){
+        Auth::logout();
+        return back();
+    }
 }

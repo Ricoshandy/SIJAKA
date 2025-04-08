@@ -23,6 +23,7 @@ Route::middleware(['auth', 'dosen'])->prefix('dosen')->group(function(){
         Route::get('pengajuan/view/{id}', 'pengajuan_view')->name('pengajuan.view');
         Route::get('pengajuan/edit/{id}', 'pengajuan_edit')->name('pengajuan.edit');
         Route::post('pengajuan/edit/{id}/submit', 'pengajuan_edit_submit')->name('pengajuan.edit.submit');
+        Route::get('pengajuan/progress/{id}', 'pengajuan_progress')->name('pengajuan.progress');
     });
     
 });

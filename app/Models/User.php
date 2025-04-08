@@ -52,4 +52,12 @@ class User extends Authenticatable
     public function getPengajuans(): HasMany {
         return $this->hasMany(Pengajuan::class, 'user_id', 'id');
     }
+
+    public function getProgresPengajuans() : HasMany {
+        return $this->hasMany(ProgresPengajuan::class, 'verified_by', 'id');
+    }
+
+    public function getReviewPengajuans() : HasMany {
+        return $this->hasMany(ReviewPengajuan::class, 'verified_by', 'id');
+    }
 }
