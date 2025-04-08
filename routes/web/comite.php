@@ -11,3 +11,4 @@ Route::middleware(['auth', 'comite'])->prefix('comite')->group(function(){
     });
     
 });
+
