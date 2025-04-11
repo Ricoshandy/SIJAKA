@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('pengajuans', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('form_pengajuan_id')->references('id')->on('form_pengajuans');
+            $table->foreignUuid('periode_id')->references('id')->on('periodes');
             $table->foreignUuid('user_id')->references('id')->on('users');
             $table->string('ijazah_tertinggi')->nullable();
             $table->string('disertasi')->nullable();
