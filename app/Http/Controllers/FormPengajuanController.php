@@ -4,19 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\FormPengajuan;
 use App\Models\Pengajuan;
+use App\Models\Periode;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class FormPengajuanController extends Controller
 {
     public function pengajuan_form(){
+        $today = Carbon::today();
         $options = FormPengajuan::all();
-        return view('Dosen.PilihFormPengajuan', compact('options'));
+        $activePeriode = Periode::where('date_start', '<=', $today)
+                         ->where('date_end', '>=', $today)
+                         ->first();
+        return view('Dosen.PilihFormPengajuan', compact('options', 'activePeriode'));
     }
 
     public function form($id){
+        $today = Carbon::today();
         $form = FormPengajuan::find($id);
-        return view('Dosen.FormPengajuan', compact('form'));
+        $activePeriode = Periode::where('date_start', '<=', $today)
+                         ->where('date_end', '>=', $today)
+                         ->first();
+        return view('Dosen.FormPengajuan', compact('form', 'activePeriode'));
     }
 
     public function pengajuan_list()

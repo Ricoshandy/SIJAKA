@@ -8,20 +8,16 @@
 <div class="stats">
 
     <div class="stat-box">
-        <h3>Dosen</h3>
-        <p>3031</p>
+        <h3>Total Dosen</h3>
+        <p>{{$dosen}}</p>
     </div>
     <div class="stat-box">
-        <h3>Total Pengajuan</h3>
-        <p>{{ Auth::user()->getPengajuans()->count() }}</p>
+        <h3>Total Pengajuan Saya</h3>
+        <p>{{ $pengajuanSaya }}</p>
     </div>
     <div class="stat-box">
-        <h3>Di Tolak</h3>
-        <p>120</p>
-    </div>
-    <div class="stat-box">
-        <h3>Di Terima</h3>
-        <p>46</p>
+        <h3>Pengajuan Saya Dalam Proses</h3>
+        <p>{{ $dalamProses  }}</p>
     </div>
     
 </div>

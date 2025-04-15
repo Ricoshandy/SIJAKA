@@ -23,7 +23,8 @@ Route::controller(AuthController::class)->prefix('auth')->group(function(){
 });
 
 Route::controller(PengajuanController::class)->group(function(){
-    Route::middleware('auth')->prefix('pengajuan')->group(function(){
-        Route::get('{email}/{key}/{file}', 'getFile');
+    Route::middleware('auth')->group(function(){
+        Route::get('pengajuan/{email}/{key}/{file}', 'getFile');
+        Route::get('sidang/{email}/{file}', 'getFileSidang');
     });
 });

@@ -3,20 +3,48 @@
 
     <div class="header">
         <h1>Form Usul Kenaikan Jabatan</h1>
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
-            <h1 style="text-align: left; font-size: 24px; color: #333; background-color:rgb(136, 239, 255); border-radius: 8px; padding: 10px 10px;">Rumpun: {{ $form->rumpun }}</h1>
-            <h1 style="text-align: left; font-size: 24px; color: #333; background-color:rgb(190, 245, 255); border-radius: 8px; padding: 10px 10px;">Usulan: Ke {{ $form->usul }}</h1>
-        </div>
     </div>
-        <div style="padding: 0 28px;">
+        <div style="margin-left: 40px;">
             <p style="text-align: left; font-size: 16px; color: #333; background-color: white; border-radius: 8px; padding: 10px 10px;">Pengajuan dapat disimpan terlebih dahulu tanpa harus melengkapi semua form</p>
 
+            <div style="
+                background-color: white;
+                padding: 24px;
+                text-align: center;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+                font-family: sans-serif;
+                margin-bottom: 20px;
+            ">
+                @if ($activePeriode !== null)
+                    <h2 style="font-size: 20px; font-weight: 700; color: #1f2937; margin-bottom: 6px;">
+                        Periode Aktif: {{ $activePeriode->name }}
+                    </h2>
+                    <p style="font-size: 16px; color: #4b5563;">
+                        {{ \Carbon\Carbon::parse($activePeriode->date_start)->translatedFormat('d F Y') }}
+                        &nbsp;–&nbsp;
+                        {{ \Carbon\Carbon::parse($activePeriode->date_end)->translatedFormat('d F Y') }}
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; width: 100%;">
+                        <h1 style="text-align: left; font-size: 18px; color: #333; background-color:rgb(136, 239, 255); border-radius: 8px; padding: 10px 10px;">Rumpun: {{ $form->rumpun }}</h1>
+                        <h1 style="text-align: left; font-size: 18px; color: #333; background-color:rgb(190, 245, 255); border-radius: 8px; padding: 10px 10px;">Usulan: Ke {{ $form->usul }}</h1>
+                    </div>
+                @else
+                    <p style="font-size: 16px; color: #b91c1c; font-weight: 500; line-height: 1.6;">
+                        Tidak ada <span style="text-decoration: underline;">periode pengajuan</span> yang aktif.<br>
+                        Silakan <span style="background-color: #fee2e2; padding: 2px 4px; border-radius: 4px;">hubungi staff kepegawaian</span> untuk mengkonfirmasi periode pengajuan.<br>
+                        <span style="font-style: italic;">Periode pengajuan hanya dapat dibuat oleh <u>staff kepegawaian</u>.</span>
+                    </p>
+                @endif
+            </div>
+            
             @php
                 $formDetails = $form->getFormPengajuanDetails()->orderBy('order', 'ASC')->get();
             @endphp
 
             <form action="{{ route('pengajuan.submit', ['id' => $form->id]) }}" method="POST" enctype="multipart/form-data" style="max-width: 100%; margin-top: 20px;">
                 @csrf
+                <input type="text" style="display: none;" name="periode_id" value="{{ $activePeriode->id }}">
 
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%;">
 

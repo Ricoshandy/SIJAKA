@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pengajuan extends Model
 {
@@ -64,5 +65,23 @@ class Pengajuan extends Model
 
     public function getPeriode(): BelongsTo {
         return $this->belongsTo(Periode::class, 'periode_id', 'id');
+    }
+
+    public function getSidangPengajuan(): HasMany {
+        return $this->hasMany(SidangPengajuan::class, 'pengajuan_id', 'id');
+    }
+
+    public function sidangKomiteTerakhir(): HasOne
+    {
+        return $this->hasOne(SidangPengajuan::class, 'pengajuan_id', 'id')
+            ->where('sidang', 'KOMITE')
+            ->latest('created_at');
+    }
+
+    public function sidangSenatTerakhir(): HasOne
+    {
+        return $this->hasOne(SidangPengajuan::class, 'pengajuan_id', 'id')
+            ->where('sidang', 'SENAT')
+            ->latest('created_at');
     }
 }
