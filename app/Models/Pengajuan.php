@@ -61,4 +61,8 @@ class Pengajuan extends Model
     public function getReviewPengajuans() : HasMany {
         return $this->hasMany(ReviewPengajuan::class, 'pengajuan_id', 'id');
     }
+
+    public function getPeriode(): BelongsTo {
+        return $this->belongsTo(Periode::class, 'periode_id', 'id');
+    }
 }
