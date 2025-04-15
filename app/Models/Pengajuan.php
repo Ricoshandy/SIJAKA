@@ -84,4 +84,8 @@ class Pengajuan extends Model
             ->where('sidang', 'SENAT')
             ->latest('created_at');
     }
+
+    public function getSk(): HasOne {
+        return $this->hasOne(SkJabatan::class, 'pengajuan_id', 'id');
+    }
 }

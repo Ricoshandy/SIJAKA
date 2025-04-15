@@ -63,7 +63,7 @@
             </div>
 
             <!-- Tombol Download -->
-            <a href="{{ route('download.pengajuan', ['id_pengajuan' => $pengajuan->id]) }}" download style="
+            <a href="{{ route('download.pengajuan', ['id_pengajuan' => $pengajuan->id]) }}" style="
                 background: linear-gradient(to right, #3b82f6, #06b6d4);
                 padding: 10px 16px;
                 border-radius: 8px;
@@ -157,6 +157,86 @@
         </div>
     </div>
 
+    <form enctype="multipart/form-data" method="post" action="{{ route('kepegawaian.pengajuan.approved', ['id_pengajuan' => $pengajuan->id]) }}" style="margin-left: 40px; padding: 50px 0;">
+        @csrf
+        <label for="sk" style="
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            font-family: sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        ">
+            <!-- Icon -->
+            <div style="
+                background-color:rgb(51, 255, 0);
+                padding: 12px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                </svg>
+
+
+            </div>
+
+            <!-- Nama File -->
+            <div style="flex-grow: 1;">
+                <p style="margin: 0; font-weight: 600; color: #1f2937;">Upload SK Kenaikan Jabatan</p>
+                <input type="file" required name="sk" id="sk" class="margin: 0; font-size: 14px; color: #6b7280;">
+            </div>
+
+            <!-- Tombol Download -->
+            <button type="submit" style="
+                background: linear-gradient(to right, #3b82f6, #06b6d4);
+                padding: 10px 16px;
+                border-radius: 8px;
+                color: white;
+                font-weight: bold;
+                font-size: 14px;
+                text-decoration: none;
+                transition: background 0.3s ease;
+                cursor: pointer;
+            "
+            onmouseover="this.style.opacity='0.9'"
+            onmouseout="this.style.opacity='1'"
+            >
+                Upload
+            </button>
+        </label>
+
+    </form>
+
+    <div style="margin-left: 40px; display: flex; justify-content: center;">
+        <button onclick="document.getElementById('modalTolak').style.display='flex'" class="action-button" style="padding: 12px 16px; --btn-bg:red;">
+            Tolak Pengajuan / Pengajuan ditolak oleh SISTER
+        </button>
+    </div>
+
+
+<div id="modalTolak" style="position: fixed; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.35); z-index: 999; top: 0; left: 0; display: none; align-items: center; justify-content: center;">
+    <div style="background-color: white; border-radius: 10px; padding: 20px; max-width: 500px; width: 90%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
+        
+        <button onclick="this.parentElement.parentElement.style.display='none'" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 18px; font-weight: bold; cursor: pointer;">&times;</button>
+        
+        <h2 id="title" style="margin-top: 0;">Tolak Pengajuan / Pengajuan Ditolak Oleh Sister?</h2>
+        <form action="{{ route('kepegawaian.pengajuan.rejected', ['id_pengajuan' => $pengajuan->id]) }}" method="post">
+            @csrf
+            <p>Apakah anda yakin ingin melakukan penolakan pengajuan kenaikan jabatan ini? ( Pengajuan oleh {{ $pengajuan->getUser->name }} )</p>
+            
+            <button type="submit" style="margin-top: 20px; padding: 8px 16px; background-color:rgb(255, 0, 0); color: white; border: none; border-radius: 6px; cursor: pointer;">Tolak Pengajuan</button>
+        </form>
+    </div>
+</div>
 
 <div id="modal" style="position: fixed; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.35); z-index: 999; top: 0; left: 0; display: none; align-items: center; justify-content: center;">
     <div style="background-color: white; border-radius: 10px; padding: 20px; max-width: 500px; width: 90%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
