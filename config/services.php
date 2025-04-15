@@ -34,5 +34,11 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    
+    'kampus_api' => [
+       'base_url' => env('KAMPUS_API_BASE_URL'),
+       'token' => env('KAMPUS_API_TOKEN'),
+],
 
+    
 ];
