@@ -36,7 +36,7 @@
                             <td>: {{ \Carbon\Carbon::parse($progress->created_at)->translatedFormat('l, d F Y, H:i') }}</td>
                         <tr>
                             <td>Status</td>
-                            <td style="background-color: {{ $progress->status == 'DRAFT' ? 'gray' : ($progress->status == 'BARU' ? 'lightblue' : ($progress->status == 'REVISI' ? 'red' : 'lightgreen')) }}">: {{ $progress->status }}</td>
+                            <td style="background-color: {{ $progress->status == 'DRAFT' ? 'gray' : ($progress->status == 'BARU' ? 'lightblue' : ($progress->status == 'REVISI' || $progress->status == 'DITOLAK' ? 'red' : 'lightgreen')) }}">: {{ $progress->status }}</td>
                         </tr>
                         </tr>
                         <tr>

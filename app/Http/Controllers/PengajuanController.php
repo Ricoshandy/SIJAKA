@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\FormPengajuan;
 use App\Models\Pengajuan;
 use App\Models\ProgresPengajuan;
+use App\Models\SkJabatan;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Str;
+use ZipArchive;
 
 class PengajuanController extends Controller
 {
@@ -221,35 +223,97 @@ class PengajuanController extends Controller
 
     public function download_pengajuan($id_pengajuan) {
         $pengajuan = Pengajuan::find($id_pengajuan);
-        $zipFileName = 'Pengajuan-' . $pengajuan->getUser->email . '.zip';
+        
+        if (!File::exists(storage_path('app/public/tmp'))) {
+            File::makeDirectory(storage_path('app/public/tmp'), 0755, true);
+        }
+
+        $zipFileName = 'Pengajuans-' . $pengajuan->getUser->email . '.zip';
         $zipFilePath = storage_path('app/public/tmp/' . $zipFileName);
         $zip = new ZipArchive;
 
         if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
             foreach ( $pengajuan->getFormPengajuan->getFormPengajuanDetails()->orderBy('order', 'ASC')->get() as $key ) {
-                $column = $key->key; 
-                $filePath = '/'. $pengajuan->$column;
+                $column = $key->key;
+                $path = '/'. $pengajuan->$column;
+                $fullPath = storage_path('app/private/' . $path);
                 
-                if (file_exists($filePath)) {
-                    // $zip->addFile($filePath, basename($file));
+                if (file_exists($fullPath)) {
+                    $filename = 'pengajuan/' . $column . '-' . basename($path);
+                    $zip->addFile($fullPath, $filename);
                 }
             }
+
+            $sidangKomite = $pengajuan->sidangKomiteTerakhir;
+            $sidangSenat = $pengajuan->sidangSenatTerakhir;
+            $sidangKomitePath = storage_path('app/private/' . $sidangKomite->berita_acara);
+            $sidangSenatePath = storage_path('app/private/' . $sidangSenat->berita_acara);
+
+            if ($sidangKomite && file_exists($sidangKomitePath)) {
+                $zip->addFile($sidangKomitePath, 'sidang/komite-' . basename($sidangKomite->berita_acara));
+            }
+            if ($sidangSenat && file_exists($sidangSenatePath)) {
+                $zip->addFile($sidangSenatePath, 'sidang/senat-' . basename($sidangSenat->berita_acara));
+            }
+            
             $zip->close();
     
             return response()->download($zipFilePath)->deleteFileAfterSend(true);
         } else {
             return back()->with('error', 'Gagal membuat file ZIP.');
         }
+    }
 
-        $allFiles = [];
-        foreach ( $pengajuan->getFormPengajuan->getFormPengajuanDetails()->orderBy('order', 'ASC')->get() as $key ){
-            $column = $key->key;    
-            
-            // <div style="margin-bottom: 6px;">
-            //     <button class="action-button" onclick="show('/{{ $pengajuan->$column }}', 'Berkas {{ $key->title }}')">
-            //         {{ $key->title }}
-            //     </button>
-            // </div>
+    public function kepegawaian_pengajuan_approved(Request $request, $id_pengajuan){
+        $pengajuan = Pengajuan::find($id_pengajuan);
+        ProgresPengajuan::create([
+            'pengajuan_id' => $pengajuan->id,
+            'verified_by' => Auth::user()->id,
+            'status' => 'DISETUJUI',
+            'tahap' => 'PENGAJUAN_SISTER',
+            'keterangan' => 'Pengajuan ke Sister oleh Kepegawaian telah berhasil dan disetujui',
+        ]);
+        $pengajuan->status = 'DISETUJUI';
+        $pengajuan->tahap = 'SK_KENAIKAN';
+        $pengajuan->save();
+
+        $file = $request->file('sk');
+        $fileName = Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $destinationPath = "sk/{$pengajuan->getUser->email}";
+        if (!File::exists($destinationPath)) {
+            File::makeDirectory($destinationPath, 0755, true);
         }
+        Storage::putFileAs($destinationPath, $file, $fileName);
+        $fullPath = $destinationPath . '/' . $fileName;
+
+        SkJabatan::create([
+            'pengajuan_id' => $pengajuan->id,
+            'uploaded_by' => Auth::user()->id,
+            'sk' => $fullPath,
+        ]);
+
+        return redirect()->route('kepegawaian.pengajuan.list')->with('success', 'Berhasil Upload SK');
+    }
+
+    public function kepegawaian_pengajuan_rejected(Request $request, $id_pengajuan){
+        $pengajuan = Pengajuan::find($id_pengajuan);
+        ProgresPengajuan::create([
+            'pengajuan_id' => $pengajuan->id,
+            'verified_by' => Auth::user()->id,
+            'status' => 'DITOLAK',
+            'tahap' => 'PENGAJUAN_SISTER',
+            'keterangan' => 'Pengajuan anda ditolak oleh Sister / tidak valid oleh kepegawaian',
+        ]);
+        $pengajuan->status = 'DITOLAK';
+        $pengajuan->tahap = 'SK_KENAIKAN';
+        $pengajuan->save();
+        return redirect()->route('kepegawaian.pengajuan.list')->with('success', 'Berhasil menolak Pengajuan');
+    }
+
+    public function download_sk($id_pengajuan) {
+        $pengajuan = Pengajuan::find($id_pengajuan);
+        $skPath = $pengajuan->getSk->sk;
+        $sk = storage_path('app/private/' . $skPath);
+        return response()->download($sk);
     }
 }

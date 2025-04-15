@@ -18,6 +18,9 @@ Route::middleware(['auth', 'kepegawaian'])->prefix('kepegawaian')->group(functio
         Route::get('pengajuan/review/{id}', 'pengajuan_review')->name('pengajuan.review');
         Route::get('pengajuan/sister/{id}', 'pengajuan_sister')->name('pengajuan.sister');
         Route::get('pengajuan/download/{id_pengajuan}', 'download_pengajuan')->name('download.pengajuan');
+
+        Route::post('pengajuan/approved/{id_pengajuan}', 'kepegawaian_pengajuan_approved')->name('kepegawaian.pengajuan.approved');
+        Route::post('pengajuan/rejected/{id_pengajuan}', 'kepegawaian_pengajuan_rejected')->name('kepegawaian.pengajuan.rejected');
     });
 
     Route::controller(ReviewPengajuanController::class)->group(function(){
