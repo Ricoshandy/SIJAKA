@@ -28,6 +28,7 @@ class PengajuanController extends Controller
         $pengajuan = new Pengajuan();
         $pengajuan->user_id = $user->id;
         $pengajuan->form_pengajuan_id = $id;
+        $pengajuan->periode_id = $request->input('periode_id');
 
         $requestCount = 0;
 
@@ -166,6 +167,12 @@ class PengajuanController extends Controller
         return view('Kepegawaian.ReviewPengajuan', compact('pengajuan'));
     }
 
+    public function pengajuan_sister($id)
+    {
+        $pengajuan = Pengajuan::find($id);
+        return view('Kepegawaian.SisterPengajuan', compact('pengajuan'));
+    }
+
     public function pengajuan_progress($id){
         $pengajuan = Pengajuan::find($id);
         return view('Dosen.ProgressPengajuan', compact('pengajuan'));
@@ -192,6 +199,15 @@ class PengajuanController extends Controller
         return response()->file($fullPath);
     }
 
+    public function getFileSidang($email, $file){
+        $path = "private/sidang/$email/$file";
+        $fullPath = storage_path('app/' . $path);
+        if (!file_exists($fullPath)) {
+            abort(404);
+        }
+        return response()->file($fullPath);
+    }
+
     public function sidang_senat_view($id){
         $pengajuan = Pengajuan::find($id);
         return view('Senat.SidangSenat', compact('pengajuan'));
@@ -201,5 +217,39 @@ class PengajuanController extends Controller
     {
         $pengajuans = Pengajuan::all();
         return view('Senat.ListPengajuan', compact('pengajuans'));
+    }
+
+    public function download_pengajuan($id_pengajuan) {
+        $pengajuan = Pengajuan::find($id_pengajuan);
+        $zipFileName = 'Pengajuan-' . $pengajuan->getUser->email . '.zip';
+        $zipFilePath = storage_path('app/public/tmp/' . $zipFileName);
+        $zip = new ZipArchive;
+
+        if ($zip->open($zipFilePath, ZipArchive::CREATE) === TRUE) {
+            foreach ( $pengajuan->getFormPengajuan->getFormPengajuanDetails()->orderBy('order', 'ASC')->get() as $key ) {
+                $column = $key->key; 
+                $filePath = '/'. $pengajuan->$column;
+                
+                if (file_exists($filePath)) {
+                    // $zip->addFile($filePath, basename($file));
+                }
+            }
+            $zip->close();
+    
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        } else {
+            return back()->with('error', 'Gagal membuat file ZIP.');
+        }
+
+        $allFiles = [];
+        foreach ( $pengajuan->getFormPengajuan->getFormPengajuanDetails()->orderBy('order', 'ASC')->get() as $key ){
+            $column = $key->key;    
+            
+            // <div style="margin-bottom: 6px;">
+            //     <button class="action-button" onclick="show('/{{ $pengajuan->$column }}', 'Berkas {{ $key->title }}')">
+            //         {{ $key->title }}
+            //     </button>
+            // </div>
+        }
     }
 }

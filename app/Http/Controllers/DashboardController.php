@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengajuan;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function dosen_dashboard() {
-        return view('Dosen.dashboard');
+        $user = Auth::user();
+        $dosen = User::where('role', '=', 'dosen')->count();
+        $pengajuanSaya = $user->getPengajuans()->count();
+        $dalamProses = $user->getPengajuans()->where('status', '=', 'DALAM_PROSES')->count();
+        return view('Dosen.dashboard', compact('dosen', 'pengajuanSaya', 'dalamProses'));
     }
 
     public function kepegawaian_dashboard() {
@@ -21,11 +26,19 @@ class DashboardController extends Controller
     }
 
     public function comite_dashboard() {
-        return view('Comite.dashboard');
+        $totalDosen = User::whereRole('dosen')->count();
+        $totalPengajuan = Pengajuan::all()->count();
+        $berkasDiterima = Pengajuan::whereTahap(['SIDANG_KOMITE','SIDANG_SENAT','PENGAJUAN_SISTER', 'SK_KENAIKAN'])->count();
+        $berkasDitolak = Pengajuan::whereStatus('REVISI')->count();
+        return view('Comite.dashboard', compact('totalDosen', 'totalPengajuan', 'berkasDiterima', 'berkasDitolak'));
     }
 
     public function senat_dashboard() {
-        return view('Senat.dashboard');
+        $totalDosen = User::whereRole('dosen')->count();
+        $totalPengajuan = Pengajuan::all()->count();
+        $berkasDiterima = Pengajuan::whereTahap(['SIDANG_KOMITE','SIDANG_SENAT','PENGAJUAN_SISTER', 'SK_KENAIKAN'])->count();
+        $berkasDitolak = Pengajuan::whereStatus('REVISI')->count();
+        return view('Senat.dashboard', compact('totalDosen', 'totalPengajuan', 'berkasDiterima', 'berkasDitolak'));
     }
 
     public function superadmin_dashboard() {

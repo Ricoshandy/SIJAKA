@@ -2,7 +2,7 @@
 @section('main-content')
 
     <div class="header">
-        <h1>SIDANG KOMITE</h1>
+        <h1>SIDANG SENAT</h1>
         <p style="text-align: left;">Pengajuan Oleh:</p>
 
         <div style="text-align: left; box-shadow: inset 3px 2px 15px rgba(0, 0, 0, 0.2); border-radius: 15px; width: fit-content; padding: 8px;">
