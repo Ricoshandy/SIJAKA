@@ -35,7 +35,7 @@
                         </div>
 
                         <div class="form__div-input">
-                            <label for="" class="form__label">User</label>
+                            <label for="" class="form__label">NIP</label>
                             <input type="email" name="email" class="form__input">
                         </div>
                     </div>
@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="form__div-input">
-                            <label for="" class="form__label">Pw</label>
+                            <label for="" class="form__label">password</label>
                             <input type="password" name="password" class="form__input">
                         </div>
                     </div>

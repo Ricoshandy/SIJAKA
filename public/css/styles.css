@@ -140,6 +140,7 @@ img{
 
 .form__div-input{
     position: relative;
+    padding: 10px;
 }
 .form__input{
     position: absolute;
